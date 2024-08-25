@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# install nginx on the server
+apt update
+apt install -y nginx
+
+# configure nginx to listen on port 80
+sed -i 's/listen 80 default_server;/listen 80 default_server;/g' /etc/nginx/sites-available/default
+# start nginx
+sudo service nginx start
+# allow incoming traffic on port 80 for Nginx
+sudo ufw allow 'Nginx HTTP'
+#creating the index.html file
+echo "Hello World!" > /var/www/html/index.html
+# restart nginx
+sudo service nginx restart
+# test nginx
+if curl -s http://localhost | grep -q "Hello World!"; then
+  echo "nginx is working correctly"
+else
+  echo "nginx is not working correctly"
+  exit 1
+fi
